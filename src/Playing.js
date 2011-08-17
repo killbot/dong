@@ -3,11 +3,22 @@ function Playing(){
     name = "Playing";
     var borderColor = "#CCC";
     var borderThickness = "15";
+    var leftPaddle = new Paddle("#11A");
+    var rightPaddle = new Paddle("#A11");
+    leftPaddle.x_pos = 10;
+    leftPaddle.y_pos = dongCanvas2.height/2;
+    rightPaddle.x_pos = dongCanvas2.width-10-rightPaddle.width;
+    rightPaddle.y_pos = dongCanvas2.height/2;
+
+
+
     this.onLoad = function(){
-        listenerCanvas.addEventListener("keydown", doKeyDown, false);
+        listenerCanvas.addEventListener("keydown", keyDown, false);
+        listenerCanvas.addEventListener("keyup", keyUp, false);
     }
     this.onExit = function(){
-        listenerCanvas.removeEventListener("keydown", doKeyDown, false);
+        listenerCanvas.removeEventListener("keydown", keyDown, false);
+        listenerCanvas.removeEventListener("keyup", keyUp, false);
     }
     this.updateState = function(){
     }
@@ -15,17 +26,36 @@ function Playing(){
         gameContext.fillStyle="#A00";
         roundRect(gameContext, 100, 100, 100, 100, 5, true, false);
         drawBorders();
-        drawDongs();
+        drawPaddles();
     }
+    this.move = function(){
+        
 
-    function doKeyDown(ev){
-        //z = 90
-        //z = 65
-        //k = 75
-        //m = 77
-        //esc = 27
-        //space = 32
-        alert("do key down pressed");
+    }
+    
+    function keyDown(ev){
+        var a = 65;
+        var z = 90;
+        var k = 75;
+        var m = 77;
+        var esc = 27;
+        var space = 32;
+        switch(ev.keyCode){
+            case a: 
+                leftPaddle.move(270);
+            case z: 
+                leftPaddle.move(90);
+            case k: 
+                rightPaddle.move(270);
+            case m: 
+                rightPaddle.move(90);
+            case esc:   //pause game please 
+            case space: //pitch the puck
+            default:
+        }
+    }
+    function keyUp(ev){
+
     }
     
     function drawBorders(){
@@ -39,9 +69,11 @@ function Playing(){
         gameContext.stroke();
 
     }
-    function drawDongs(){
-
+    function drawPaddles(){
+        leftPaddle.draw();
+        rightPaddle.draw();
     }
+    
 }
 Playing.prototype = new GameState();
 Playing.prototype.constructor = Playing;

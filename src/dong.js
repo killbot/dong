@@ -11,6 +11,8 @@ require("src/StartMenu.js");
 require("src/Playing.js");
 require("src/Paused.js");
 require("src/getPosition.js");
+require("src/Entity.js");
+require("src/Paddle.js");
 
 
 function init(){
