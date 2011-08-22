@@ -5,6 +5,8 @@ function Rectangle(l, t, w, h){
     this.top = t;
     this.width = w;
     this.height = h;
+    this.right = this.left + this.width;
+    this.bottom = this.top + this.height;
 
     this.getTopLeft = function(){
         return this.left, this.top;

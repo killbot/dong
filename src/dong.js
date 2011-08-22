@@ -12,6 +12,7 @@ require("src/Playing.js");
 require("src/Paused.js");
 require("src/getPosition.js");
 require("src/Entity.js");
+require("src/Border.js");
 require("src/Paddle.js");
 require("src/Puck.js");
 require("src/Rectangle.js");

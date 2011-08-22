@@ -2,15 +2,15 @@
 //Note that the x_pos and y_pos coordinates represents the upper-left corner
 //of the box in the Paddle's case.
 
-function Paddle(color){
+function Paddle(color, width, height){
     Entity.call(this);
     this.side;   //indicates which side the paddle is on, left or right
     this.outlineColor = color;
     this.outlineColorLeft = "#11A";  //left = bluish
     this.outlineColorRight = "#A11"; //right = redish
     this.thickness = 4;
-    this.height = 30;
-    this.width = 10;
+    this.height = height;
+    this.width = width;
     this.maxSpeed = 0.25;
     this.speed = 0;
     this.draw = function(){

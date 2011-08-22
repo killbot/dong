@@ -50,7 +50,7 @@ function Puck(color){
         this.beingHeld = true;
         this.paddle = paddle
         this.paddleRect = this.paddle.getRect();
-        x = this.paddleRect.left+this.paddleRect.width+this.diameter/2;
+        x = this.paddleRect.left+this.paddleRect.width+this.diameter/2+1;
         y = this.paddleRect.top + this.paddleRect.height/2;
         this.x_pos = x;
         this.y_pos = y;

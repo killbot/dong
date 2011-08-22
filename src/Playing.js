@@ -3,9 +3,11 @@ function Playing(){
     name = "Playing";
     var borderColor = "#CCC";
     var borderThickness = "15";
-    var leftPaddle = new Paddle("#11A");
-    var rightPaddle = new Paddle("#A11");
+    var leftPaddle = new Paddle("#11A", 30, 60);
+    var rightPaddle = new Paddle("#A11", 30, 60);
     var puck = new Puck("#1A1");
+    var topBorder = new Border(borderColor, borderThickness, borderThickness/2);
+    var bottomBorder = new Border(borderColor, borderThickness, dongCanvas2.height-borderThickness/2);
 //    var entityList =[leftPaddle,
 //                rightPaddle, 
 //                puck
@@ -28,8 +30,20 @@ function Playing(){
         listenerCanvas.removeEventListener("keyup", keyUp, false);
     }
     this.updateState = function(){
-        checkCollision(leftPaddle, puck);
-        checkCollision(rightPaddle, puck);
+        if(checkCollision(leftPaddle, puck)){
+            puck.move(-puck.direction + 180, puck.speed);
+        }
+        else if (checkCollision(rightPaddle, puck)){
+            puck.move(-puck.direction + 180, puck.speed);
+        }
+        if(checkCollision(topBorder, puck)){
+            puck.move(-puck.direction, puck.speed);
+        }
+        else if (checkCollision(bottomBorder, puck)){
+            puck.move(-puck.direction, puck.speed);
+        }
+
+        updateBorders(); 
         updatePaddles();
         updatePuck();
 
@@ -102,7 +116,7 @@ function Playing(){
         }
     }    
     
-    function drawBorders(){
+/*    function drawBorders(){
         gameContext.beginPath();
         gameContext.strokeStyle = borderColor;
         gameContext.lineWidth = borderThickness;
@@ -113,6 +127,16 @@ function Playing(){
         gameContext.stroke();
 
     }
+*/
+    function updateBorders(){
+        topBorder.update();
+        bottomBorder.update();
+    }
+    function drawBorders(){
+        topBorder.draw();
+        bottomBorder.draw();
+    }
+
     function drawPaddles(){
         leftPaddle.draw();
         rightPaddle.draw();
@@ -130,28 +154,34 @@ function Playing(){
         puck.update();
     }
     function checkCollision(entity1, entity2){
-        alert("inside collision checking");
+//        alert("inside collision checking");
         //checks for collisions between two game entities. returns true/false
         var rect1 = entity1.getRect();
         var rect2 = entity2.getRect();
         var x_collision = false;
         var y_collision = false;
+//        alert("rect1 x = from "+rect1.left+" to "+rect1.right+", rect2 x = from "+rect2.left+" to "+rect2.right);
+//        alert("rect1 y = from "+rect1.top+" to "+rect1.bottom+", rect2 x = from "+rect2.top+" to "+rect2.bottom);
         if (rect1.right >= rect2.left && rect1.right <= rect2.right){
             x_collision = true;
+//            alert("x collision case 1");
         }
-        else if (rect2.right >= rect1.eft && rect2.right <= rect1.right){
+        else if (rect2.right >= rect1.left && rect2.right <= rect1.right){
             x_collision = true;
+//            alert("x collision case 2");
         }
         if (rect1.bottom >= rect2.top && rect1.bottom <= rect2.bottom){
             y_collision = true;
+//            alert("y collision case 1");
         }
         else if (rect2.bottom >= rect1.top && rect2.bottom <= rect1.bottom){
             y_collision = true;
+//            alert("y collision case 2");
         }
         
         if (x_collision && y_collision){
+//            alert("collision detected");
             return true;
-            alert("collision detected");
         }
         else{
             return false;
