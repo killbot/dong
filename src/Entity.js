@@ -5,6 +5,7 @@ function Entity(){
     this.x_pos = 0;  //x and y are both used as the starting points for all
     this.y_pos = 0;  //drawings/paths/ects...
     this.maxSpeed = 0;
+    this.currSpeed = 0;
     this.direction = 0;
     this.x_velocity = 0;
     this.y_velocity = 0;

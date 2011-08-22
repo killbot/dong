@@ -13,7 +13,8 @@ require("src/Paused.js");
 require("src/getPosition.js");
 require("src/Entity.js");
 require("src/Paddle.js");
-
+require("src/Puck.js");
+require("src/Rectangle.js");
 
 function init(){
     listenerCanvas = document.getElementById("listenerCanvas");
@@ -48,7 +49,7 @@ function gameLoop(){
 }
 
 function clear(){
-    clearCanvas(bgContext, bgCanvas);
+//    clearCanvas(bgContext, bgCanvas);
     clearCanvas(gameContext, CanvasBuffer[hidden]);
 }
 
@@ -57,10 +58,11 @@ function update(){
 //    updateBackground();
 //update game canvas and current state
     stateArray[currentState].updateState();
+//    alert("updating state: "+currentState);
 }
 
 function draw(){
-    drawBackground();
+//    drawBackground();
     drawGameWindow();
 }
 

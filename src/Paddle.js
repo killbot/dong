@@ -1,4 +1,6 @@
-//dong class.  has no base class, i guess other than Object().  w/e.
+//Paddle class.  inhierits from Entity in Entity.js.
+//Note that the x_pos and y_pos coordinates represents the upper-left corner
+//of the box in the Paddle's case.
 
 function Paddle(color){
     Entity.call(this);
@@ -9,7 +11,8 @@ function Paddle(color){
     this.thickness = 4;
     this.height = 30;
     this.width = 10;
-    this.maxSpeed = 30;
+    this.maxSpeed = 0.25;
+    this.speed = 0;
     this.draw = function(){
 //        gameContext.beginPath();
         gameContext.lineWidth = this.thickness;
@@ -21,11 +24,22 @@ function Paddle(color){
         this.y_pos = this.y_pos + this.y_velocity*1000/fps;    
     }
     this.move = function(direction_degrees){
-       this.direction = direction_degrees;
-       this.y_velocity = this.maxSpeed*Math.sin(Math.Pi/180*this.direction);
+//        alert("before direction set ="+this.direction);
+        this.direction = direction_degrees;
+//        alert("after direction set ="+this.direction);
+        this.speed = this.maxSpeed;
+        this.y_velocity = this.maxSpeed*Math.sin(Math.PI/180*this.direction);
+//        alert("y_velocity = "+this.y_velocity);
     }
     this.stop = function(direction_degrees){
+        this.speed = 0;
         this.y_velocity = 0;
+    }
+
+    this.getRect = function(){ //returns the rectangle that bounds the Paddle
+        var tempRect = new Rectangle(this.x_pos, this.y_pos, this.width, this.height);
+        return tempRect;
+
     }
 }
 Paddle.prototype = new Entity();
