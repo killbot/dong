@@ -16,7 +16,7 @@ require("src/Border.js");
 require("src/Paddle.js");
 require("src/Puck.js");
 require("src/Rectangle.js");
-
+require("src/ScoreBox.js");
 function init(){
     listenerCanvas = document.getElementById("listenerCanvas");
     dongCanvas = document.getElementById("dongCanvas");

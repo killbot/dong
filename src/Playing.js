@@ -2,16 +2,26 @@
 function Playing(){
     name = "Playing";
     var borderColor = "#CCC";
-    var borderThickness = "15";
+    var borderThickness = 15;
+    var scoreBoxColor = "#111";
+//    var scoreBoxColor = "rbga(255,255,255, .7)";
+    var scoreTextColor = "#EEE";
+    var scoreBoxWidth = 100;
+    var scoreBoxHeight = 23;
+    var topBorderThickness = 25;
     var leftPaddle = new Paddle("#11A", 30, 60);
     var rightPaddle = new Paddle("#A11", 30, 60);
-    var puck = new Puck("#1A1");
-    var topBorder = new Border(borderColor, borderThickness, borderThickness/2);
+    var puck = new Puck("#1A1", true);
+    var topBorder = new Border(borderColor, topBorderThickness, topBorderThickness/2);
     var bottomBorder = new Border(borderColor, borderThickness, dongCanvas2.height-borderThickness/2);
-//    var entityList =[leftPaddle,
-//                rightPaddle, 
-//                puck
-//                ];
+    var puckList = [puck];
+    var scoreBoard = new ScoreBox(scoreBoxColor, 
+                            scoreTextColor, 
+                            dongCanvas2.width/4,
+                            1, 
+                            scoreBoxWidth, 
+                            scoreBoxHeight
+                            );
     var a = 65;
     var z = 90;
     var k = 75;
@@ -30,31 +40,53 @@ function Playing(){
         listenerCanvas.removeEventListener("keyup", keyUp, false);
     }
     this.updateState = function(){
-        if(checkCollision(leftPaddle, puck)){
-            puck.move(-puck.direction + 180, puck.speed);
+        for (i = puckList.length-1; i>=0; i--){   //GO THROUGH BACKWARDS PLZ
+            if(checkCollision(leftPaddle, puckList[i])){
+                puckList[i].move(-puckList[i].direction + 180, puckList[i].speed);
+                scoreBoard.score += 5;
+            }
+            else if (checkCollision(rightPaddle, puckList[i])){
+                puckList[i].move(-puckList[i].direction + 180, puckList[i].speed);
+                scoreBoard.score += 5;
+            }
+
+            if(checkCollision(topBorder, puckList[i])){
+                puckList[i].move(-puckList[i].direction, puckList[i].speed);
+            }
+            else if (checkCollision(bottomBorder, puckList[i])){
+                puckList[i].move(-puckList[i].direction, puckList[i].speed);
+            }
+        
+            if (puckList[i].x_pos+puckList[i].diameter*2 < 0 ||
+                    puckList[i].x_pos-puckList[i].diameter*2 > dongCanvas2.width){
+                if (puckList.length==1){    //only attach() the last puck, destroy others.
+                    var paddle;
+                    Math.random() <= 0.5 ? paddle = leftPaddle : paddle = rightPaddle;
+                    puckList[i].attach(paddle);
+                }
+                else {
+                    delete puckList[i];
+                    puckList.splice(i, 1);
+                }
+            }
         }
-        else if (checkCollision(rightPaddle, puck)){
-            puck.move(-puck.direction + 180, puck.speed);
-        }
-        if(checkCollision(topBorder, puck)){
-            puck.move(-puck.direction, puck.speed);
-        }
-        else if (checkCollision(bottomBorder, puck)){
-            puck.move(-puck.direction, puck.speed);
+
+        if (scoreBoard.score == 100) {
+            MAKEMULTIBALLS(4);
         }
 
         updateBorders(); 
         updatePaddles();
-        updatePuck();
-
-
+        updatePucks();
+        updateScoreBoard();
     }
     this.drawState = function(){
         gameContext.fillStyle="#A00";
 //        roundRect(gameContext, 100, 100, 100, 100, 5, true, false);
         drawBorders();
+        drawScoreBoard();
         drawPaddles();
-        drawPuck();
+        drawPucks();
     }
 //    this.move = function(){
 //        
@@ -68,7 +100,7 @@ function Playing(){
         
     }
     function initPuck(){
-        puck.attach(leftPaddle);    
+        puckList[0].attach(leftPaddle);    
     }
     
     function keyDown(ev){
@@ -89,7 +121,9 @@ function Playing(){
             case esc:   //pause game please 
                 break;
             case space: //pitch the puck
-                puck.pitch();
+                if (puckList[0].beingHeld){
+                    puckList[0].pitch();
+                }
                 break;
             default:
                 break;
@@ -147,12 +181,36 @@ function Playing(){
         rightPaddle.update();
     }
     
-    function drawPuck(){
-        puck.draw();
+    function drawPucks(){
+        for (i in puckList){
+            puckList[i].draw();
+        }
     }
-    function updatePuck(){
-        puck.update();
+    function updatePucks(){
+        for (i in puckList){
+            puckList[i].update();
+        }
     }
+
+    function updateScoreBoard(){
+        scoreBoard.update();
+    }
+    function drawScoreBoard(){
+        scoreBoard.draw();
+    }
+
+    function MAKEMULTIBALLS(n){
+        var n = n;
+        for (i=1; i<=n; i++){
+            var r = Math.floor(Math.random()*255);
+            var g = Math.floor(Math.random()*255);
+            var b = Math.floor(Math.random()*255);
+            var a = Math.floor(Math.random()*10)/10;
+            var nuColor = "rgba("+r+","+g+","+b+","+a+")";
+            puckList.push(new Puck(nuColor, false));
+        }
+    }
+
     function checkCollision(entity1, entity2){
 //        alert("inside collision checking");
         //checks for collisions between two game entities. returns true/false
@@ -162,11 +220,11 @@ function Playing(){
         var y_collision = false;
 //        alert("rect1 x = from "+rect1.left+" to "+rect1.right+", rect2 x = from "+rect2.left+" to "+rect2.right);
 //        alert("rect1 y = from "+rect1.top+" to "+rect1.bottom+", rect2 x = from "+rect2.top+" to "+rect2.bottom);
-        if (rect1.right >= rect2.left && rect1.right <= rect2.right){
+        if (rect1.right+4 >= rect2.left && rect1.right <= rect2.right){
             x_collision = true;
 //            alert("x collision case 1");
         }
-        else if (rect2.right >= rect1.left && rect2.right <= rect1.right){
+        else if (rect2.right+4 >= rect1.left && rect2.right <= rect1.right){
             x_collision = true;
 //            alert("x collision case 2");
         }

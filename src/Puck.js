@@ -1,12 +1,13 @@
 //Puck class.  inheirits from Entity in Entity.js
 
-function Puck(color){
+function Puck(color, beingHeld){
     Entity.call(this);
     this.color = color;
     this.thickness = 3;
-    this.diameter = 50;
-    this.maxSpeed = .5;         //speed in some bullshit units
-    this.beingHeld = true;      //represents the object state of being held 
+    this.diameter = 25;
+    this.maxSpeed = .5;         //speed in some bullshit units, like pixels
+                                //per frame or some shit.  i dunno.
+    this.beingHeld = beingHeld; //represents the object state of being held 
                                 //for pitching by a paddle or not.
     this.paddle = null;
     this.paddleRect = null;     //paddle that the puck is attached to.  null otherwise;
@@ -50,7 +51,13 @@ function Puck(color){
         this.beingHeld = true;
         this.paddle = paddle
         this.paddleRect = this.paddle.getRect();
-        x = this.paddleRect.left+this.paddleRect.width+this.diameter/2+1;
+        var fuzzFactor = 5;
+        if (this.paddleRect.left < dongCanvas2.width/2){
+            x = this.paddleRect.left+this.paddleRect.width+this.diameter/2+5;
+        }
+        else {
+            x = this.paddleRect.left - this.diameter/2 - 5;
+        }
         y = this.paddleRect.top + this.paddleRect.height/2;
         this.x_pos = x;
         this.y_pos = y;

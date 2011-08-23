@@ -1,6 +1,6 @@
 function roundRect(context, x, y, width, height, radius, fill, stoke){
     if (typeof stroke == "undefined" ) {
-       stroke = true;
+       stroke = false;
     }
     if (typeof radius ==="undefined"){
         radius = 5;
