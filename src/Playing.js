@@ -9,8 +9,8 @@ function Playing(){
     var scoreBoxWidth = 100;
     var scoreBoxHeight = 23;
     var topBorderThickness = 25;
-    var leftPaddle = new Paddle("#11A", 30, 60);
-    var rightPaddle = new Paddle("#A11", 30, 60);
+    var leftPaddle = new Paddle("#11A", 10, 60);
+    var rightPaddle = new Paddle("#A11", 10, 60);
     var puck = new Puck("#1A1", true);
     var topBorder = new Border(borderColor, topBorderThickness, topBorderThickness/2);
     var bottomBorder = new Border(borderColor, borderThickness, dongCanvas2.height-borderThickness/2);
@@ -44,17 +44,24 @@ function Playing(){
             if(checkCollision(leftPaddle, puckList[i])){
                 puckList[i].move(-puckList[i].direction + 180, puckList[i].speed);
                 scoreBoard.score += 5;
+                puckList[i].update();   //needed so things don't get stuck
+                                        //inside other things
+                if (scoreBoard.score == 20){MAKEMULTIBALLS(4,puckList[i]);}
             }
             else if (checkCollision(rightPaddle, puckList[i])){
                 puckList[i].move(-puckList[i].direction + 180, puckList[i].speed);
                 scoreBoard.score += 5;
+                puckList[i].update();
+                if (scoreBoard.score == 20){MAKEMULTIBALLS(4,puckList[i]);}
             }
 
             if(checkCollision(topBorder, puckList[i])){
                 puckList[i].move(-puckList[i].direction, puckList[i].speed);
+                puckList[i].update();
             }
             else if (checkCollision(bottomBorder, puckList[i])){
                 puckList[i].move(-puckList[i].direction, puckList[i].speed);
+                puckList[i].update();
             }
         
             if (puckList[i].x_pos+puckList[i].diameter*2 < 0 ||
@@ -65,17 +72,14 @@ function Playing(){
                     puckList[i].attach(paddle);
                 }
                 else {
-                    alert("x_pos of puck#3 = "+puckList[3].x_pos);
-//                    alert("deleting puck #"+i+" size of puckList = "+puckList.length);
+                //    alert("x_pos of puck#3 = "+puckList[3].x_pos);
+                //    alert("deleting puck #"+i+" size of puckList = "+puckList.length);
                     delete puckList[i];
                     puckList.splice(i, 1);
                 }
             }
         }
 
-        if (scoreBoard.score == 20) {
-            MAKEMULTIBALLS(1);
-        }
 
         updateBorders(); 
         updatePaddles();
@@ -115,7 +119,6 @@ function Playing(){
                 leftPaddle.move(90);
                 break;
             case k: 
-                alert("k pressed");
                 rightPaddle.move(270);
                 break;
             case m: 
@@ -190,8 +193,8 @@ function Playing(){
         }
     }
     function updatePucks(){
-        for (k in puckList){
-            puckList[k].update();
+        for (i in puckList){
+            puckList[i].update();
         }
     }
 
@@ -218,11 +221,11 @@ function Playing(){
                                     copiedPuck.x_pos, 
                                     copiedPuck.y_pos, 
                                     copiedPuck.direction + Math.random()*15*2-15,
-                                    copiedPuck.maxSpeed,
+                                    copiedPuck.maxSpeed - .05,
                                     copiedPuck.diameter 
                                     ));
             a = puckList[i];
-            alert("new puck = "+a.color+", "+a.beingHeld+", "+a.x_pos+", "+a.y_pos+", "+a.currSpeed+", "+a.diameter);
+            //alert("new puck = "+a.color+", "+a.beingHeld+", "+a.x_pos+", "+a.y_pos+", "+a.direction+", "+a.currSpeed+", "+a.diameter);
         }
     }
 
