@@ -65,14 +65,16 @@ function Playing(){
                     puckList[i].attach(paddle);
                 }
                 else {
+                    alert("x_pos of puck#3 = "+puckList[3].x_pos);
+//                    alert("deleting puck #"+i+" size of puckList = "+puckList.length);
                     delete puckList[i];
                     puckList.splice(i, 1);
                 }
             }
         }
 
-        if (scoreBoard.score == 100) {
-            MAKEMULTIBALLS(4);
+        if (scoreBoard.score == 20) {
+            MAKEMULTIBALLS(1);
         }
 
         updateBorders(); 
@@ -106,13 +108,14 @@ function Playing(){
     function keyDown(ev){
 //        alert("keydown event = "+ev.keyCode);
         switch(ev.keyCode){
-            case a: 
+            case a:
                 leftPaddle.move(270);
                 break;
-            case z: 
+            case z:
                 leftPaddle.move(90);
                 break;
             case k: 
+                alert("k pressed");
                 rightPaddle.move(270);
                 break;
             case m: 
@@ -187,8 +190,8 @@ function Playing(){
         }
     }
     function updatePucks(){
-        for (i in puckList){
-            puckList[i].update();
+        for (k in puckList){
+            puckList[k].update();
         }
     }
 
@@ -199,15 +202,27 @@ function Playing(){
         scoreBoard.draw();
     }
 
-    function MAKEMULTIBALLS(n){
+    function MAKEMULTIBALLS(n,somePuck){
         var n = n;
+        if (!somePuck){var copiedPuck = puckList[0];}
+        else{var copiedPuck = somePuck;}
         for (i=1; i<=n; i++){
             var r = Math.floor(Math.random()*255);
             var g = Math.floor(Math.random()*255);
             var b = Math.floor(Math.random()*255);
             var a = Math.floor(Math.random()*10)/10;
             var nuColor = "rgba("+r+","+g+","+b+","+a+")";
-            puckList.push(new Puck(nuColor, false));
+//            var nucolor = "rgba(100, 100, 255, .9)";
+            puckList.push(new Puck(nuColor, 
+                                    false, 
+                                    copiedPuck.x_pos, 
+                                    copiedPuck.y_pos, 
+                                    copiedPuck.direction + Math.random()*15*2-15,
+                                    copiedPuck.maxSpeed,
+                                    copiedPuck.diameter 
+                                    ));
+            a = puckList[i];
+            alert("new puck = "+a.color+", "+a.beingHeld+", "+a.x_pos+", "+a.y_pos+", "+a.currSpeed+", "+a.diameter);
         }
     }
 

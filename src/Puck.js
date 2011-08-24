@@ -1,10 +1,20 @@
 //Puck class.  inheirits from Entity in Entity.js
 
-function Puck(color, beingHeld){
+function Puck(color, beingHeld, x, y, direction, speed, diameter){
     Entity.call(this);
     this.color = color;
     this.thickness = 3;
-    this.diameter = 25;
+    if (!x){this.x_pos = 0;}
+    else{this.x_pos = x;}
+    if (!y){this.y_pos = 0;}
+    else{this.y_pos = y;}
+    if (!direction){this.direction = 0;}
+    else{this.direction = direction;}
+    if (!speed){this.speed = 0;}
+    else{this.speed = speed;}
+    if (!diameter){this.diameter = 25;}
+    else{this.diameter = diameter;}
+
     this.maxSpeed = .5;         //speed in some bullshit units, like pixels
                                 //per frame or some shit.  i dunno.
     this.beingHeld = beingHeld; //represents the object state of being held 
@@ -20,6 +30,10 @@ function Puck(color, beingHeld){
             this.x_velocity = 0;
             this.y_velocity = this.speed * Math.sin(Math.PI/180*this.direction);
         //    alert("rect x and y = "+this.paddleRect.left+", "+this.paddleRect.top);
+        }
+        else{
+            this.x_velocity = this.speed * Math.cos(Math.PI/180*this.direction);
+            this.y_velocity = this.speed * Math.sin(Math.PI/180*this.direction);
         }
         this.y_pos = this.y_pos + this.y_velocity*1000/fps;
         this.x_pos = this.x_pos + this.x_velocity*1000/fps;
@@ -68,10 +82,10 @@ function Puck(color, beingHeld){
         this.beingHeld = false;
         this.attachedTo = null;
         var angleBounds = 45;           //in degrees;  
-        var leftOrRight;    //see below. 1 if on the left side. -1 if on right
-        if (this.x_pos < dongCanvas2.width/2){leftOrRight = 1;}
-        else {leftOrRight = -1;}
-        this.move(Math.random()*angleBounds, this.maxSpeed);
+        var leftOrRight;    //see below. 0 if on the left side. 1 if on right
+        if (this.x_pos < dongCanvas2.width/2){leftOrRight = 0;}
+        else {leftOrRight = 1;}
+        this.move(Math.random()*angleBounds*2-angleBounds + 180*leftOrRight, this.maxSpeed);
 //        alert("max speed for puck = "+this.maxSpeed);         
     }
 
