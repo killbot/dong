@@ -45,14 +45,17 @@ function Playing(){
                 puckList[i].move(-puckList[i].direction + 180, puckList[i].speed);
                 scoreBoard.score += 5;
                 puckList[i].update();   //needed so things don't get stuck
-                                        //inside other things
-                if (scoreBoard.score == 20){MAKEMULTIBALLS(4,puckList[i]);}
+                puckList[i].update();   //inside other things
+                if (scoreBoard.score%20==0){MAKEMULTIBALLS(4,puckList[i]);}
+                puckList[i].speed += .005;
             }
             else if (checkCollision(rightPaddle, puckList[i])){
                 puckList[i].move(-puckList[i].direction + 180, puckList[i].speed);
                 scoreBoard.score += 5;
                 puckList[i].update();
-                if (scoreBoard.score == 20){MAKEMULTIBALLS(4,puckList[i]);}
+                puckList[i].update();
+                if (scoreBoard.score%20==0){MAKEMULTIBALLS(4,puckList[i]);}
+                puckList[i].speed += .005;
             }
 
             if(checkCollision(topBorder, puckList[i])){
