@@ -82,6 +82,11 @@ function clearCanvas(context, canvas){
     canvas.width = w;
 }
 
+function makeNewGame(){
+    delete stateArray[1];
+    stateArray[1] = new Playing();
+}
+
 function drawBackground(){
    x = window.innerWidth;
    y = window.innerHeight;

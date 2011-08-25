@@ -18,7 +18,7 @@ var stateArray = new Array(3);
 var mouseCoords = [0,0];
 
 
-var fps = 60;       //frames per second
+var fps = 30;       //frames per second
 
 
 

@@ -1,6 +1,7 @@
 //specific GameState types.  base gamestate class found in GameState.js
 function Playing(){
     name = "Playing";
+    var lives = 5;
     var borderColor = "#CCC";
     var borderThickness = 15;
     var scoreBoxColor = "#111";
@@ -28,18 +29,32 @@ function Playing(){
     var m = 77;
     var esc = 27;
     var space = 32;
+    var m1 = 1;     //m1 through m6 are used in the transformamtion matrix
+    var m2 = 0;     //for the function warpCanvas();
+    var m3 = 0;
+    var m4 = 1;
+    var m5 = 0;
+    var m6 = 0;
     initPaddles();
     initPuck();
+
 
     this.onLoad = function(){
         listenerCanvas.addEventListener("keydown", keyDown, false);
         listenerCanvas.addEventListener("keyup", keyUp, false);
+        listenerCanvas.addEventListener("click", replay, false);
     }
     this.onExit = function(){
         listenerCanvas.removeEventListener("keydown", keyDown, false);
         listenerCanvas.removeEventListener("keyup", keyUp, false);
+        listenerCanvas.removeEventListener("click", replay, false);
     }
     this.updateState = function(){
+        if (lives > 0){
+            this.updateAll();
+        }
+    }
+    this.updateAll = function(){
         for (i = puckList.length-1; i>=0; i--){   //GO THROUGH BACKWARDS PLZ
             if(checkCollision(leftPaddle, puckList[i])){
                 puckList[i].move(-puckList[i].direction + 180, puckList[i].speed);
@@ -72,7 +87,9 @@ function Playing(){
                 if (puckList.length==1){    //only attach() the last puck, destroy others.
                     var paddle;
                     Math.random() <= 0.5 ? paddle = leftPaddle : paddle = rightPaddle;
+                    lives -= 1;
                     puckList[i].attach(paddle);
+                    
                 }
                 else {
                 //    alert("x_pos of puck#3 = "+puckList[3].x_pos);
@@ -90,12 +107,30 @@ function Playing(){
         updateScoreBoard();
     }
     this.drawState = function(){
+        this.drawAll();
+
+//        if (lives > 0){
+//            this.drawAll();
+//        }
+//        else {
+//            gameOver();
+//        }
+    }
+
+    this.drawAll = function(){
         gameContext.fillStyle="#A00";
 //        roundRect(gameContext, 100, 100, 100, 100, 5, true, false);
         drawBorders();
+        drawLives();
         drawScoreBoard();
         drawPaddles();
         drawPucks();
+//        if (scoreBoard.score >= 50){
+//            warpCanvas();
+//        }
+        if (lives <= 0){
+            drawGameOver();
+        }
     }
 //    this.move = function(){
 //        
@@ -159,6 +194,12 @@ function Playing(){
         }
     }    
     
+    function replay(ev){
+        if (lives <=0){
+            makeNewGame();
+            stateArray[currentState].changeState("Playing");
+        }
+    }
 /*    function drawBorders(){
         gameContext.beginPath();
         gameContext.strokeStyle = borderColor;
@@ -207,16 +248,67 @@ function Playing(){
     function drawScoreBoard(){
         scoreBoard.draw();
     }
+    
+    function drawLives(){
+        var color = "#333";
+        var textColor = "#003";
+        var radius = 4;
+        var y = dongCanvas2.height-borderThickness/2;
+        var x = dongCanvas2.width - 10;
+        gameContext.beginPath();
+        gameContext.fillStyle = color;
+        for (i=0; i < lives; i++){
+            gameContext.arc(x, y, radius, 0, 2*Math.PI, true);
+            x -= radius*2 + 1;
+        }
+        gameContext.fill();
+
+    }
+    
+    function drawGameOver(){
+        var x = dongCanvas2.width/4;
+        var y = dongCanvas2.height/4;
+        var width = dongCanvas2.width/2;
+        var height = dongCanvas2.height/2;
+        var r = 15;
+        var fillColor = "#BBB";
+        var textColor = "#246";
+        gameContext.fillStyle = fillColor;
+        roundRect(gameContext, x, y, width, height, r, true, false);
+        gameContext.textAlign = "center";
+        gameContext.textBaseline = "top";
+        gameContext.fillStyle = textColor;
+        gameContext.font = "60px VT323";
+        var textArray = ["GAME OVER", 
+                        "Your Score:",
+                        scoreBoard.score, 
+                        "-->Play Again<--"
+                        ]
+        for (i=0; i<textArray.length; i++){
+            gameContext.fillText(textArray[i], x+width/2, y+10+60*i);
+        }
+
+
+
+    }
+
+    function warpCanvas(){
+        m1 += Math.random()+1;
+        m2 += Math.random();
+        m3 += Math.random()+1;
+        m4 += Math.random();
+        gameContext.transform(m1, m2, m3, m4, m5, m6);
+    }
 
     function MAKEMULTIBALLS(n,somePuck){
         var n = n;
         if (!somePuck){var copiedPuck = puckList[0];}
         else{var copiedPuck = somePuck;}
         for (i=1; i<=n; i++){
-            var r = Math.floor(Math.random()*255);
-            var g = Math.floor(Math.random()*255);
-            var b = Math.floor(Math.random()*255);
-            var a = Math.floor(Math.random()*10)/10;
+            var r = Math.floor(Math.random()*230)+25;
+            var g = Math.floor(Math.random()*230)+25;
+            var b = Math.floor(Math.random()*230)+25;
+            var a = Math.floor(Math.random()*8)/10+.2;
             var nuColor = "rgba("+r+","+g+","+b+","+a+")";
 //            var nucolor = "rgba(100, 100, 255, .9)";
             puckList.push(new Puck(nuColor, 
