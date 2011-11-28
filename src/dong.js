@@ -33,6 +33,8 @@ function init(){
     drawBackground();
     drawGameWindow();
     gameContext.fillStyle = "#BBB";
+    Playtomic.Log.View(5276, "1306ecbc57b640d2", 
+        "3091732fc09349b19a8a65b432a479", document.location);
     flip();
 
 }

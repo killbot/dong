@@ -46,6 +46,7 @@ function StartMenu(){
         if ((x_left < mouseCoords[0] && mouseCoords[0] < x_right)
                 && (y_top < mouseCoords[1] && mouseCoords[1] < y_bottom)){
             stateArray[currentState].changeState("Playing");
+            Playtomic.Log.Play();
         }
 
     }
